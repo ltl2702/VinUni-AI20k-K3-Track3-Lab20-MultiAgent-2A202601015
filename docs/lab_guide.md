@@ -111,7 +111,17 @@ Cách khắc phục (chọn 1 trong 3):
 
 ## Exit ticket
 
-Mỗi nhóm trả lời 2 câu:
+### 1. Case nào NÊN dùng multi-agent? Vì sao?
+- **Case nghiên cứu tổng hợp sâu (Deep Research / Complex Synthesis):** Ví dụ như tổng hợp tài liệu học thuật đa nguồn (GraphRAG, khảo sát công nghệ), phân tích báo cáo tài chính doanh nghiệp, hoặc hỗ trợ kỹ thuật khách hàng nhiều cấp độ (Tier-1 Triage -> Specialist -> Resolution).
+- **Lý do:**
+  - Tách biệt rõ ràng các trách nhiệm (Separation of Concerns): Researcher tập trung truy xuất tài liệu chính xác, Analyst tập trung phản biện và so sánh, Writer tập trung hành văn và trích dẫn chuẩn xác.
+  - Ngăn ngừa hiện tượng bão hòa / loãng ngữ cảnh (Context Dilution).
+  - Tăng độ phủ trích dẫn (Citation Coverage) và giảm thiểu ảo giác (Hallucination) nhờ cơ chế grounding vào nguồn tài liệu thực tế.
+  - Cung cấp khả năng quan sát và gỡ lỗi (Observability) chi tiết tại từng mắt xích thông qua `route_history` và `trace`.
 
-1. Case nào nên dùng multi-agent? Vì sao?
-2. Case nào không nên dùng multi-agent? Vì sao?
+### 2. Case nào KHÔNG NÊN dùng multi-agent? Vì sao?
+- **Case tác vụ đơn giản, phản hồi tức thì (Simple Q&A / Low-latency Tasks):** Ví dụ như trả lời câu hỏi trực tiếp (Factual Lookup), dịch thuật đoạn văn ngắn, sinh code snippet đơn giản, hoặc tóm tắt văn bản ngắn.
+- **Lý do:**
+  - **Độ trễ cao (High Latency):** Multi-agent phải đi qua nhiều lượt gọi LLM tuần tự (Supervisor -> Researcher -> Analyst -> Writer), khiến thời gian phản hồi tăng gấp 3-5 lần.
+  - **Chi phí token lớn (High Cost):** Mỗi bước handoff chuyển toàn bộ state/notes qua lại làm tiêu tốn lượng token gấp 2-4 lần so với một prompt đơn lẻ.
+  - **Phức tạp hóa không cần thiết (Over-engineering):** Khả năng xảy ra lỗi routing hoặc lỗi đồng bộ state cao hơn trong khi Single-Agent baseline đã đủ giải quyết tốt với chi phí và độ trễ tối ưu.
