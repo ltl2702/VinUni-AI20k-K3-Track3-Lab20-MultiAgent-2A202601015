@@ -26,9 +26,26 @@ class ResearchState(BaseModel):
     trace: list[dict[str, Any]] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
 
+    total_input_tokens: int = 0
+    total_output_tokens: int = 0
+    total_cost_usd: float = 0.0
+
     def record_route(self, route: str) -> None:
         self.route_history.append(route)
         self.iteration += 1
 
     def add_trace_event(self, name: str, payload: dict[str, Any]) -> None:
         self.trace.append({"name": name, "payload": payload})
+
+    def add_usage(
+        self,
+        input_tokens: int | None = None,
+        output_tokens: int | None = None,
+        cost_usd: float | None = None,
+    ) -> None:
+        if input_tokens:
+            self.total_input_tokens += input_tokens
+        if output_tokens:
+            self.total_output_tokens += output_tokens
+        if cost_usd:
+            self.total_cost_usd += cost_usd
